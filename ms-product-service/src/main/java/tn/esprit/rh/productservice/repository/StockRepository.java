@@ -1,0 +1,1 @@
+package tn.esprit.rh.productservice.repository; import tn.esprit.rh.productservice.domain.Stock; import org.springframework.data.jpa.repository.JpaRepository; public interface StockRepository extends JpaRepository<Stock,Long> {}

@@ -1,0 +1,1 @@
+package tn.esprit.rh.supplierservice.repository; import tn.esprit.rh.supplierservice.domain.Fournisseur; import org.springframework.data.jpa.repository.JpaRepository; public interface FournisseurRepository extends JpaRepository<Fournisseur,Long> {}

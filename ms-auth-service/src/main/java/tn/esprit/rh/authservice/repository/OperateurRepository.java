@@ -1,0 +1,1 @@
+package tn.esprit.rh.authservice.repository; import tn.esprit.rh.authservice.domain.Operateur; import org.springframework.data.jpa.repository.JpaRepository; public interface OperateurRepository extends JpaRepository<Operateur,Long> {}

@@ -1,0 +1,1 @@
+package tn.esprit.rh.invoiceservice.repository; import tn.esprit.rh.invoiceservice.domain.DetailFacture; import org.springframework.data.jpa.repository.JpaRepository; public interface DetailFactureRepository extends JpaRepository<DetailFacture,Long> {}

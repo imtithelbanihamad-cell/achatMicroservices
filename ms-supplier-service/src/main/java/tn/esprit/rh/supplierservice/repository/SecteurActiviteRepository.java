@@ -1,0 +1,1 @@
+package tn.esprit.rh.supplierservice.repository; import tn.esprit.rh.supplierservice.domain.SecteurActivite; import org.springframework.data.jpa.repository.JpaRepository; public interface SecteurActiviteRepository extends JpaRepository<SecteurActivite,Long> {}

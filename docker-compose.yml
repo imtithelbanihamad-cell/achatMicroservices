@@ -1,0 +1,104 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: achat-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--protocol=TCP", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 180s
+
+
+
+  ms-platform:
+    build:
+      context: .
+      dockerfile: ./ms-platform/Dockerfile
+    ports:
+      - "8761:8761"
+
+  ms-product-service:
+    build:
+      context: .
+      dockerfile: ./ms-product-service/Dockerfile
+    environment: &service-env
+      DB_URL: jdbc:mysql://mysql:3306/ms_product_service?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      EUREKA_URL: http://ms-platform:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-platform:
+        condition: service_started
+
+  ms-supplier-service:
+    build:
+      context: .
+      dockerfile: ./ms-supplier-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/ms_supplier_service?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      EUREKA_URL: http://ms-platform:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-platform:
+        condition: service_started
+
+  ms-invoice-service:
+    build:
+      context: .
+      dockerfile: ./ms-invoice-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/ms_invoice_service?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      EUREKA_URL: http://ms-platform:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-platform:
+        condition: service_started
+
+  ms-auth-service:
+    build:
+      context: .
+      dockerfile: ./ms-auth-service/Dockerfile
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/ms_auth_service?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      EUREKA_URL: http://ms-platform:8761/eureka/
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-platform:
+        condition: service_started
+
+  ms-api-gateway:
+    build:
+      context: .
+      dockerfile: ./ms-api-gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_URL: http://ms-platform:8761/eureka/
+    depends_on:
+      - ms-platform
+      - ms-product-service
+      - ms-supplier-service
+      - ms-invoice-service
+      - ms-auth-service
+
+volumes:
+  mysql_data:

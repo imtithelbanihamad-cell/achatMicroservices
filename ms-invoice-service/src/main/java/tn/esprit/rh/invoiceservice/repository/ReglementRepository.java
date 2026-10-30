@@ -1,0 +1,1 @@
+package tn.esprit.rh.invoiceservice.repository; import tn.esprit.rh.invoiceservice.domain.Reglement; import org.springframework.data.jpa.repository.JpaRepository; public interface ReglementRepository extends JpaRepository<Reglement,Long> {}
